@@ -29,11 +29,12 @@ class Musicas with ChangeNotifier {
     }
 
     if (musica.id != null &&
-        musica.id.trim().isNotEmpty &&
+        musica.id
+            .trim()
+            .isNotEmpty &&
         _items.containsKey(musica.id)) {
-
-      await  http.patch(
-        "$_baseUrl/musicas/$(musica.id).json",
+      await http.patch(
+        Uri.parse("$_baseUrl/musicas/${musica.id}.json"),
         body: json.encode({
           'titulo': musica.titulo,
           'cantor': musica.cantor,
@@ -43,29 +44,31 @@ class Musicas with ChangeNotifier {
 
       _items.update(
         musica.id,
-        (_) => Musica(
-          id: musica.id,
-          titulo: musica.titulo,
-          cantor: musica.cantor,
-          album: musica.album,
-        ),
+            (_) =>
+            Musica(
+              id: musica.id,
+              titulo: musica.titulo,
+              cantor: musica.cantor,
+              album: musica.album,
+            ),
       );
     } else {
-     final response = await  http.post(
-          "$_baseUrl/musicas.json",
-          body: json.encode({
-            'titulo': musica.titulo,
-            'cantor': musica.cantor,
-            'album': musica.album,
-          }),
-     );
-     
-     final id = json.decode(response.body)['titulo'];
-     print(json.decode(response.body));
+      final response = await http.post(
+        Uri.parse("$_baseUrl/musicas.json"),
+        body: json.encode({
+          'titulo': musica.titulo,
+          'cantor': musica.cantor,
+          'album': musica.album,
+        }),
+      );
+
+      final id = json.decode(response.body)['titulo'];
+      print(json.decode(response.body));
       //adicionar
       _items.putIfAbsent(
           id,
-          () => Musica(
+              () =>
+              Musica(
                 id: musica.id,
                 titulo: musica.titulo,
                 cantor: musica.cantor,
