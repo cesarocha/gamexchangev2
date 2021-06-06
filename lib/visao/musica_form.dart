@@ -10,7 +10,7 @@ class MusicaForm extends StatefulWidget {
 
 class _MusicaFormState extends State<MusicaForm> {
   final _form = GlobalKey<FormState>();
-
+  bool _isLoading = false;
   final Map<String, String> _formData = {};
 
   void _loadFormData(Musica musica) {
@@ -40,13 +40,17 @@ class _MusicaFormState extends State<MusicaForm> {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.save),
-              onPressed: () {
+              onPressed: () async {
                 final isValid = _form.currentState.validate();
 
                 if (isValid) {
                   _form.currentState.save();
 
-                  Provider.of<Musicas>(context, listen: false).put(
+                  setState(() {
+                    _isLoading = true;
+                  });
+
+                  await Provider.of<Musicas>(context, listen: false).put(
                     Musica(
                       id: _formData['id'],
                       titulo: _formData['titulo'],
@@ -55,58 +59,64 @@ class _MusicaFormState extends State<MusicaForm> {
                     ),
                   );
 
+                  setState(() {
+                    _isLoading = false;
+                  });
+
                   Navigator.of(context).pop();
                 }
               },
             ),
           ],
         ),
-        body: Padding(
-            padding: EdgeInsets.all(15),
-            child: Form(
-                key: _form,
-                child: Column(children: <Widget>[
-                  TextFormField(
-                    initialValue: _formData['titulo'],
-                    decoration: InputDecoration(
-                      labelText: 'Título',
-                      border: InputBorder.none,
-                      icon: Icon(Icons.title_rounded),
-                    ),
-                    validator: (value) {
-                      // ignore: missing_return
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Campo título em branco';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) => _formData['titulo'] = value,
-                  ),
-                  TextFormField(
-                    initialValue: _formData['cantor'],
-                    decoration: InputDecoration(
-                      labelText: 'Cantor',
-                      border: InputBorder.none,
-                      icon: Icon(Icons.mic_rounded),
-                    ),
-                    validator: (value) {
-                      // ignore: missing_return
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Campo cantor em branco';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) => _formData['cantor'] = value,
-                  ),
-                  TextFormField(
-                    initialValue: _formData['album'],
-                    decoration: InputDecoration(
-                      labelText: 'URL capa do álbum',
-                      border: InputBorder.none,
-                      icon: Icon(Icons.album_rounded),
-                    ),
-                    onSaved: (value) => _formData['album'] = value,
-                  ),
-                ]))));
+        body: _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Padding(
+                padding: EdgeInsets.all(15),
+                child: Form(
+                    key: _form,
+                    child: Column(children: <Widget>[
+                      TextFormField(
+                        initialValue: _formData['titulo'],
+                        decoration: InputDecoration(
+                          labelText: 'Título',
+                          border: InputBorder.none,
+                          icon: Icon(Icons.title_rounded),
+                        ),
+                        validator: (value) {
+                          // ignore: missing_return
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Campo título em branco';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => _formData['titulo'] = value,
+                      ),
+                      TextFormField(
+                        initialValue: _formData['cantor'],
+                        decoration: InputDecoration(
+                          labelText: 'Cantor',
+                          border: InputBorder.none,
+                          icon: Icon(Icons.mic_rounded),
+                        ),
+                        validator: (value) {
+                          // ignore: missing_return
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Campo cantor em branco';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => _formData['cantor'] = value,
+                      ),
+                      TextFormField(
+                        initialValue: _formData['album'],
+                        decoration: InputDecoration(
+                          labelText: 'URL capa do álbum',
+                          border: InputBorder.none,
+                          icon: Icon(Icons.album_rounded),
+                        ),
+                        onSaved: (value) => _formData['album'] = value,
+                      ),
+                    ]))));
   }
 }
