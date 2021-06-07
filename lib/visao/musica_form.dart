@@ -31,6 +31,11 @@ class _MusicaFormState extends State<MusicaForm> {
     _loadFormData(musica);
   }
 
+  void initState(){
+    super.initState();
+    Provider.of<Musicas>(context, listen: false).carregarMusica();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +55,7 @@ class _MusicaFormState extends State<MusicaForm> {
                     _isLoading = true;
                   });
 
-                  await Provider.of<Musicas>(context, listen: false).put(
+                  await Provider.of<Musicas>(context, listen: false).adicionarMusica(
                     Musica(
                       id: _formData['id'],
                       titulo: _formData['titulo'],

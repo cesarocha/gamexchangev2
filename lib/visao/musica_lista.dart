@@ -7,9 +7,12 @@ import 'package:flutter_app/rotas/AppRotas.dart';
 import 'package:provider/provider.dart';
 
 class MusicList extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     final Musicas musicas = Provider.of(context);
+    final musica = musicas.items;
 
     return Scaffold(
       appBar: AppBar(
@@ -28,7 +31,11 @@ class MusicList extends StatelessWidget {
       ),
       body: ListView.builder(
         itemCount: musicas.count,
-        itemBuilder: (context, index) => MusicTile(musicas.byIndex(index),
+        itemBuilder: (ctx, i) => Column(
+          children: <Widget>[
+            Divider(),
+            MusicTile(musica[i]),
+          ]
         ),
       ),
     );

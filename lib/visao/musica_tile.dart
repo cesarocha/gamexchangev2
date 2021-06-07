@@ -56,7 +56,7 @@ class MusicTile extends StatelessWidget {
                 ).then((confimed) {
                   if (confimed) {
                     Provider.of<Musicas>(context, listen: false)
-                        .remove(musica);
+                        .removerMusica(musica.id);
                   }
                 });
               },
