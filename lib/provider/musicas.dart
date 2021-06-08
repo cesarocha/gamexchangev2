@@ -8,7 +8,7 @@ import 'dart:core';
 
 class Musicas with ChangeNotifier {
   static const _baseUrl =
-      'https://code-gamexchange-default-rtdb.firebaseio.com/';
+      'https://code-gamexchange-default-rtdb.firebaseio.com/musicas';
   List<Musica> _items = []; /*{...MUSICAS_EXEMPLO}*/
 
   List<Musica> get items => [..._items];
@@ -82,14 +82,14 @@ class Musicas with ChangeNotifier {
   Future<void> removerMusica(String id) async {
     final index = _items.indexWhere((prod) => prod.id == id);
     if (index >= 0) {
-      final product = _items[index];
-      _items.remove(product);
+      final musica = _items[index];
+      _items.remove(musica);
       notifyListeners();
 
-      final response = await http.delete(Uri.parse("$_baseUrl/${product.id}.json"));
+      final response = await http.delete(Uri.parse("$_baseUrl/${musica.id}.json"));
 
       if (response.statusCode >= 400) {
-        _items.insert(index, product);
+        _items.insert(index, musica);
         notifyListeners();
         throw HttpException('Ocorreu um erro na exclusão do produto.');
       }

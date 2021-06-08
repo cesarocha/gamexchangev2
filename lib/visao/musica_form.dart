@@ -11,7 +11,20 @@ class MusicaForm extends StatefulWidget {
 class _MusicaFormState extends State<MusicaForm> {
   final _form = GlobalKey<FormState>();
   bool _isLoading = false;
-  final Map<String, String> _formData = {};
+  final _formData = Map<String, Object>();
+
+  void initState(){
+    super.initState();
+    Provider.of<Musicas>(context, listen: false).carregarMusica();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final Musica musica = ModalRoute.of(context).settings.arguments;
+    _loadFormData(musica);
+  }
 
   void _loadFormData(Musica musica) {
     if (musica != null) {
@@ -20,20 +33,6 @@ class _MusicaFormState extends State<MusicaForm> {
       _formData['cantor'] = musica.cantor;
       _formData['album'] = musica.album;
     }
-  }
-
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-
-    final Musica musica = ModalRoute.of(context).settings.arguments;
-    _loadFormData(musica);
-  }
-
-  void initState(){
-    super.initState();
-    Provider.of<Musicas>(context, listen: false).carregarMusica();
   }
 
   @override
@@ -51,23 +50,45 @@ class _MusicaFormState extends State<MusicaForm> {
                 if (isValid) {
                   _form.currentState.save();
 
+                  final musica = Musica(
+                    id: _formData['id'],
+                    titulo: _formData['titulo'],
+                    cantor: _formData['cantor'],
+                    album: _formData['album'],
+                  );
+
                   setState(() {
                     _isLoading = true;
                   });
 
-                  await Provider.of<Musicas>(context, listen: false).adicionarMusica(
-                    Musica(
-                      id: _formData['id'],
-                      titulo: _formData['titulo'],
-                      cantor: _formData['cantor'],
-                      album: _formData['album'],
-                    ),
-                  );
+                  final musicas = Provider.of<Musicas>(context, listen: false);
 
-                  setState(() {
-                    _isLoading = false;
-                  });
-
+                  try {
+                    if (_formData['id'] == null) {
+                      await musicas.adicionarMusica(musica);
+                    } else {
+                      await musicas.atualizarMusica(musica);
+                    }
+                    Navigator.of(context).pop();
+                  } catch (error) {
+                    await showDialog<Null>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: Text('Ocorreu um erro!'),
+                        content: Text('Ocorreu um erro pra salvar o produto!'),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('Fechar'),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                        ],
+                      ),
+                    );
+                  } finally {
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  }
                   Navigator.of(context).pop();
                 }
               },

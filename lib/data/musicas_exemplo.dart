@@ -1,4 +1,4 @@
-import 'package:flutter_app/modelo/musica.dart';
+/*import 'package:flutter_app/modelo/musica.dart';
 
 const MUSICAS_EXEMPLO = {
 
@@ -32,4 +32,4 @@ const MUSICAS_EXEMPLO = {
     album: "",
     //anolancamento: '2018',
   ),
-};
+};*/
