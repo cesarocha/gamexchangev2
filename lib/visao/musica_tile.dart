@@ -4,20 +4,36 @@ import 'package:flutter_app/provider/musicas.dart';
 import 'package:flutter_app/rotas/AppRotas.dart';
 import 'package:provider/provider.dart';
 
-class MusicTile extends StatelessWidget {
+class MusicTile extends StatefulWidget {
   final Musica musica;
 
   const MusicTile(this.musica);
 
   @override
+  _MusicTileState createState() => _MusicTileState();
+}
+
+class _MusicTileState extends State<MusicTile> {
+  bool _isLoading = true;
+
+  void initState() {
+    super.initState();
+    Provider.of<Musicas>(context, listen: false).carregarMusica().then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final albumURL = musica.album == null || musica.album.isEmpty
+    final albumURL = widget.musica.album == null || widget.musica.album.isEmpty
         ? CircleAvatar(child: Icon(Icons.album))
-        : CircleAvatar(backgroundImage: NetworkImage(musica.album));
+        : CircleAvatar(backgroundImage: NetworkImage(widget.musica.album));
     return ListTile(
       leading: albumURL,
-      title: Text(musica.titulo),
-      subtitle: Text(musica.cantor),
+      title: Text(widget.musica.titulo),
+      subtitle: Text(widget.musica.cantor),
       trailing: Container(
         width: 100,
         child: Row(
@@ -28,7 +44,7 @@ class MusicTile extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pushNamed(
                   AppRotas.MUSICA_FORM,
-                  arguments: musica,
+                  arguments: widget.musica,
                 );
               },
             ),
@@ -56,7 +72,7 @@ class MusicTile extends StatelessWidget {
                 ).then((confimed) {
                   if (confimed) {
                     Provider.of<Musicas>(context, listen: false)
-                        .removerMusica(musica.id);
+                        .removerMusica(widget.musica.id);
                   }
                 });
               },

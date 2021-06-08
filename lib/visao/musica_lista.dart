@@ -7,7 +7,9 @@ import 'package:flutter_app/rotas/AppRotas.dart';
 import 'package:provider/provider.dart';
 
 class MusicList extends StatelessWidget {
-
+  Future<void> _refreshProducts(BuildContext context) {
+    return Provider.of<Musicas>(context, listen: false).carregarMusica();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +31,17 @@ class MusicList extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: musicas.count,
-        itemBuilder: (ctx, i) => Column(
-          children: <Widget>[
-            Divider(),
-            MusicTile(musica[i]),
-          ]
+      body: RefreshIndicator(
+        onRefresh: () => _refreshProducts(context),
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: ListView.builder(
+            itemCount: musicas.count,
+            itemBuilder: (ctx, i) => Column(children: <Widget>[
+              MusicTile(musica[i]),
+              Divider(),
+            ]),
+          ),
         ),
       ),
     );
