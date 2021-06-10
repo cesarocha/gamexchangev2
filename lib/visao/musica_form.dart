@@ -89,7 +89,6 @@ class _MusicaFormState extends State<MusicaForm> {
                       _isLoading = false;
                     });
                   }
-                  Navigator.of(context).pop();
                 }
               },
             ),
