@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/modelo/musica.dart';
-import 'package:flutter_app/provider/musicas.dart';
+import 'package:flutter_app/modelo/game.dart';
+import 'package:flutter_app/provider/games.dart';
 import 'package:flutter_app/rotas/AppRotas.dart';
 import 'package:provider/provider.dart';
 
-class MusicTile extends StatefulWidget {
-  final Musica musica;
+class GameTile extends StatefulWidget {
+  final Game game;
 
-  const MusicTile(this.musica);
+  const GameTile(this.game);
 
   @override
-  _MusicTileState createState() => _MusicTileState();
+  _GameTileState createState() => _GameTileState();
 }
 
-class _MusicTileState extends State<MusicTile> {
+class _GameTileState extends State<GameTile> {
   bool _isLoading = true;
 
   void initState() {
     super.initState();
-    Provider.of<Musicas>(context, listen: false).carregarMusica().then((_) {
+    Provider.of<Games>(context, listen: false).carregarGame().then((_) {
       setState(() {
         _isLoading = false;
       });
@@ -27,13 +27,13 @@ class _MusicTileState extends State<MusicTile> {
 
   @override
   Widget build(BuildContext context) {
-    final albumURL = widget.musica.album == null || widget.musica.album.isEmpty
-        ? CircleAvatar(child: Icon(Icons.album))
-        : CircleAvatar(backgroundImage: NetworkImage(widget.musica.album));
+    final imageUrl = widget.game.imageUrl == null || widget.game.imageUrl.isEmpty
+        ? CircleAvatar(child: Icon(Icons.gamepad))
+        : CircleAvatar(backgroundImage: NetworkImage(widget.game.imageUrl));
     return ListTile(
-      leading: albumURL,
-      title: Text(widget.musica.titulo),
-      subtitle: Text(widget.musica.cantor),
+      leading: imageUrl,
+      title: Text(widget.game.nome),
+      subtitle: Text(widget.game.xchange),
       trailing: Container(
         width: 100,
         child: Row(
@@ -43,8 +43,8 @@ class _MusicTileState extends State<MusicTile> {
               color: Colors.indigoAccent,
               onPressed: () {
                 Navigator.of(context).pushNamed(
-                  AppRotas.MUSICA_FORM,
-                  arguments: widget.musica,
+                  AppRotas.GAME_FORM,
+                  arguments: widget.game,
                 );
               },
             ),
@@ -56,7 +56,7 @@ class _MusicTileState extends State<MusicTile> {
                   context: context,
                   builder: (ctx) =>
                       AlertDialog(
-                        title: Text('Excluir Música'),
+                        title: Text('Excluir Jogo'),
                         content: Text('Tem certeza?'),
                         actions: <Widget>[
                           FlatButton(
@@ -71,8 +71,8 @@ class _MusicTileState extends State<MusicTile> {
                       ),
                 ).then((confimed) {
                   if (confimed) {
-                    Provider.of<Musicas>(context, listen: false)
-                        .removerMusica(widget.musica.id);
+                    Provider.of<Games>(context, listen: false)
+                        .removerGame(widget.game.id);
                   }
                 });
               },

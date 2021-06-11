@@ -1,31 +1,31 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/visao/musica_tile.dart';
-import 'package:flutter_app/provider/musicas.dart';
+import 'package:flutter_app/visao/game_tile.dart';
+import 'package:flutter_app/provider/games.dart';
 import 'package:flutter_app/rotas/AppRotas.dart';
 import 'package:provider/provider.dart';
 
-class MusicList extends StatelessWidget {
+class GameList extends StatelessWidget {
   Future<void> _refreshProducts(BuildContext context) {
-    return Provider.of<Musicas>(context, listen: false).carregarMusica();
+    return Provider.of<Games>(context, listen: false).carregarGame();
   }
 
   @override
   Widget build(BuildContext context) {
-    final Musicas musicas = Provider.of(context);
-    final musica = musicas.items;
+    final Games games = Provider.of(context);
+    final game = games.items;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('MusisT'),
+        title: Text('gameXchange'),
         backgroundColor: Colors.black54,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
               Navigator.of(context).pushNamed(
-                AppRotas.MUSICA_FORM,
+                AppRotas.GAME_FORM,
               );
             },
           ),
@@ -36,9 +36,9 @@ class MusicList extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(8),
           child: ListView.builder(
-            itemCount: musicas.count,
+            itemCount: games.count,
             itemBuilder: (ctx, i) => Column(children: <Widget>[
-              MusicTile(musica[i]),
+              GameTile(game[i]),
               Divider(),
             ]),
           ),
