@@ -7,7 +7,7 @@ class Game with ChangeNotifier{
   final String plataforma;
   final String estado;
   final String imageUrl;
-  bool isActive;
+ // bool isActive;
 
   Game({
     this.id,
@@ -16,6 +16,6 @@ class Game with ChangeNotifier{
     @required this.plataforma,
     @required this.estado,
     @required this.imageUrl,
-    this.isActive = false
+   // this.isActive = false
   });
 }

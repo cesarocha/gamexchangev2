@@ -18,7 +18,7 @@ class _GameTileState extends State<GameTile> {
 
   void initState() {
     super.initState();
-    Provider.of<Games>(context, listen: false).carregarGame().then((_) {
+    Provider.of<Games>(context, listen: false).carregarGames().then((_) {
       setState(() {
         _isLoading = false;
       });
@@ -28,7 +28,7 @@ class _GameTileState extends State<GameTile> {
   @override
   Widget build(BuildContext context) {
     final imageUrl = widget.game.imageUrl == null || widget.game.imageUrl.isEmpty
-        ? CircleAvatar(child: Icon(Icons.gamepad))
+        ? CircleAvatar(child: Icon(Icons.album))
         : CircleAvatar(backgroundImage: NetworkImage(widget.game.imageUrl));
     return ListTile(
       leading: imageUrl,

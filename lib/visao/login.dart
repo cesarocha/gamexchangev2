@@ -1,20 +1,23 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_app/visao/game_tile.dart';
-import 'package:flutter_app/provider/games.dart';
+import 'package:flutter_app/modelo/user.dart';
+import 'package:flutter_app/provider/users.dart';
 import 'package:flutter_app/rotas/AppRotas.dart';
 import 'package:provider/provider.dart';
 
-class GameList extends StatelessWidget {
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   Future<void> _refreshProducts(BuildContext context) {
-    return Provider.of<Games>(context, listen: false).carregarGames();
+    return Provider.of<Users>(context, listen: false).carregarUser();
   }
 
   @override
   Widget build(BuildContext context) {
-    final Games games = Provider.of(context);
-    final game = games.items;
+    final Users users = Provider.of(context);
+    final user = users.items;
 
     return Scaffold(
       appBar: AppBar(
@@ -25,7 +28,7 @@ class GameList extends StatelessWidget {
             icon: Icon(Icons.add),
             onPressed: () {
               Navigator.of(context).pushNamed(
-                AppRotas.GAME_FORM,
+                AppRotas.USER_FORM,
               );
             },
           ),
@@ -36,9 +39,9 @@ class GameList extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(8),
           child: ListView.builder(
-            itemCount: games.count,
+            itemCount: users.Usercount,
             itemBuilder: (ctx, i) => Column(children: <Widget>[
-              GameTile(game[i]),
+              //Login(user[i]),
               Divider(),
             ]),
           ),

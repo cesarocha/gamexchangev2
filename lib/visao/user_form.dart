@@ -1,39 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/modelo/game.dart';
-import 'package:flutter_app/provider/games.dart';
+import 'package:flutter_app/modelo/user.dart';
+import 'package:flutter_app/provider/users.dart';
 import 'package:provider/provider.dart';
 
-class GameForm extends StatefulWidget {
+class UserForm extends StatefulWidget {
   @override
-  _GameFormState createState() => _GameFormState();
+  _UserFormState createState() => _UserFormState();
 }
 
-class _GameFormState extends State<GameForm> {
+class _UserFormState extends State<UserForm> {
   final _form = GlobalKey<FormState>();
   bool _isLoading = false;
   final _formData = Map<String, Object>();
 
   void initState(){
     super.initState();
-    Provider.of<Games>(context, listen: false).carregarGames();
+    Provider.of<Users>(context, listen: false).carregarUser();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    final Game game = ModalRoute.of(context).settings.arguments;
-    _loadFormData(game);
+    final User user = ModalRoute.of(context).settings.arguments;
+    _loadFormData(user);
   }
 
-  void _loadFormData(Game game) {
-    if (game != null) {
-      _formData['id'] = game.id;
-      _formData['nome'] = game.nome;
-      _formData['xchange'] = game.xchange;
-      _formData['plataforma'] = game.plataforma;
-      _formData['estado'] = game.estado;
-      _formData['imageUrl'] = game.imageUrl;
+  void _loadFormData(User user) {
+    if (user != null) {
+      _formData['id'] = user.id;
+      _formData['nome'] = user.nome;
+      _formData['nickname'] = user.nickname;
+      _formData['email'] = user.email;
+      _formData['telefone'] = user.telefone;
+      _formData['senha'] = user.senha;
+      _formData['termo'] = user.termo;
     }
   }
 
@@ -41,7 +42,7 @@ class _GameFormState extends State<GameForm> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Game - Cadastro'),
+          title: Text('User - Cadastro'),
           backgroundColor: Colors.black54,
           actions: <Widget>[
             IconButton(
@@ -52,26 +53,27 @@ class _GameFormState extends State<GameForm> {
                 if (isValid) {
                   _form.currentState.save();
 
-                  final game = Game(
+                  final user = User(
                     id: _formData['id'],
                     nome: _formData['nome'],
-                    xchange: _formData['xchange'],
-                    plataforma: _formData['plataforma'],
-                    estado: _formData['estado'],
-                    imageUrl: _formData['imageUrl'],
+                    nickname: _formData['nickname'],
+                    email: _formData['email'],
+                    telefone: _formData['telefone'],
+                    senha: _formData['senha'],
+                    termo: _formData['termo'],
                   );
 
                   setState(() {
                     _isLoading = true;
                   });
 
-                  final games = Provider.of<Games>(context, listen: false);
+                  final users = Provider.of<Users>(context, listen: false);
 
                   try {
                     if (_formData['id'] == null) {
-                      await games.adicionarGame(game);
+                      await users.adicionarUser(user);
                     } else {
-                      await games.atualizarGame(game);
+                      await users.atualizarUser(user);
                     }
                     Navigator.of(context).pop();
                   } catch (error) {
@@ -79,7 +81,7 @@ class _GameFormState extends State<GameForm> {
                       context: context,
                       builder: (ctx) => AlertDialog(
                         title: Text('Ocorreu um erro!'),
-                        content: Text('Ocorreu um erro pra salvar o jogo!'),
+                        content: Text('Ocorreu um erro pra salvar o usuário!'),
                         actions: <Widget>[
                           FlatButton(
                             child: Text('Fechar'),
@@ -109,9 +111,9 @@ class _GameFormState extends State<GameForm> {
                       TextFormField(
                         initialValue: _formData['nome'],
                         decoration: InputDecoration(
-                          labelText: 'nome',
+                          labelText: 'Nome',
                           border: InputBorder.none,
-                          icon: Icon(Icons.title_rounded),
+                          icon: Icon(Icons.account_box),
                         ),
                         validator: (value) {
                           // ignore: missing_return
@@ -122,62 +124,76 @@ class _GameFormState extends State<GameForm> {
                         },
                         onSaved: (value) => _formData['nome'] = value,
                       ),
+                      //NICKNAME
                       TextFormField(
-                        initialValue: _formData['xchange'],
+                        initialValue: _formData['nickname'],
                         decoration: InputDecoration(
-                          labelText: 'xchange',
+                          labelText: 'Nickname',
                           border: InputBorder.none,
                           icon: Icon(Icons.gamepad),
                         ),
                         validator: (value) {
                           // ignore: missing_return
                           if (value == null || value.trim().isEmpty) {
-                            return 'Campo xchange em branco';
+                            return 'Campo nickname em branco';
                           }
                           return null;
                         },
-                        onSaved: (value) => _formData['xchange'] = value,
+                        onSaved: (value) => _formData['nickname'] = value,
                       ),
+                      //E-MAIL
                       TextFormField(
-                        initialValue: _formData['plataforma'],
+                        initialValue: _formData['email'],
                         decoration: InputDecoration(
-                          labelText: 'plataforma',
+                          labelText: 'E-mail',
                           border: InputBorder.none,
-                          icon: Icon(Icons.videogame_asset),
+                          icon: Icon(Icons.email),
                         ),
                         validator: (value) {
                           // ignore: missing_return
                           if (value == null || value.trim().isEmpty) {
-                            return 'Campo plataforma em branco';
+                            return 'Campo e-mail em branco';
                           }
                           return null;
                         },
-                        onSaved: (value) => _formData['plataforma'] = value,
+                        onSaved: (value) => _formData['email'] = value,
                       ),
+                      //TELEFONE
                       TextFormField(
-                        initialValue: _formData['estado'],
+                        initialValue: _formData['telefone'],
                         decoration: InputDecoration(
-                          labelText: 'estado',
+                          labelText: '(xx) xxxx-xxxxx',
                           border: InputBorder.none,
-                          icon: Icon(Icons.announcement_sharp),
+                          icon: Icon(Icons.phone),
                         ),
                         validator: (value) {
                           // ignore: missing_return
                           if (value == null || value.trim().isEmpty) {
-                            return 'Campo estado em branco';
+                            return 'Campo telefone em branco';
                           }
                           return null;
                         },
-                        onSaved: (value) => _formData['estado'] = value,
+                        onSaved: (value) => _formData['telefone'] = value,
                       ),
+                      //SENHA
                       TextFormField(
-                        initialValue: _formData['imageUrl'],
+                        initialValue: _formData['senha'],
                         decoration: InputDecoration(
-                          labelText: 'URL capa do jogo',
+                          labelText: 'Password',
                           border: InputBorder.none,
-                          icon: Icon(Icons.album_rounded),
+                          icon: Icon(Icons.lock),
                         ),
-                        onSaved: (value) => _formData['imageUrl'] = value,
+                        onSaved: (value) => _formData['senha'] = value,
+                      ),
+                      CheckboxListTile(
+                        title: Text("Concordo com os termos e condições de uso"),
+                        value: _formData['termo'],
+                        onChanged: (newValue) {
+                          setState(() {
+                            _formData['termo'] = newValue;
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
                       ),
                     ]))));
   }

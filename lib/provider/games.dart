@@ -17,7 +17,7 @@ class Games with ChangeNotifier {
     return _items.length;
   }
 
-  Future<void> carregarGame() async {
+  Future<void> carregarGames() async {
     final response = await http.get(Uri.parse("$_baseUrl.json"));
     Map<String, dynamic> data = json.decode(response.body);
 
@@ -61,7 +61,7 @@ class Games with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> atualizarGame(Game game) async {
+    Future<void> atualizarGame(Game game) async {
     if (game == null || game.id == null) {
       return;
     }
