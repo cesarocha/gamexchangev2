@@ -98,7 +98,7 @@ class Users with ChangeNotifier {
       if (response.statusCode >= 400) {
         _items.insert(index, user);
         notifyListeners();
-        throw HttpException('Ocorreu um erro na exclusão do jogo.');
+        throw HttpException('Ocorreu um erro na exclusão do usuário.');
       }
     }
   }

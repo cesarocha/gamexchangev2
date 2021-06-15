@@ -25,7 +25,7 @@ class GameList extends StatelessWidget {
             icon: Icon(Icons.add),
             onPressed: () {
               Navigator.of(context).pushNamed(
-                AppRotas.GAME_FORM,
+                AppRotas.USER_FORM,
               );
             },
           ),

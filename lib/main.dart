@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/visao/game_lista.dart';
 import 'package:flutter_app/provider/games.dart';
+import 'package:flutter_app/provider/users.dart';
 import 'package:flutter_app/rotas/AppRotas.dart';
 import 'package:flutter_app/visao/game_form.dart';
+import 'package:flutter_app/visao/login.dart';
 import 'package:flutter_app/visao/user_form.dart';
 import 'package:provider/provider.dart';
 
@@ -14,14 +16,14 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (ctx) => new Games(),
+          create: (ctx) => new Users(),
         )
       ],
       child: MaterialApp(
         title: 'gameXchange',
         theme: new ThemeData(scaffoldBackgroundColor: Colors.white),
         routes: {
-          AppRotas.HOME: (_) => GameList(),
+          AppRotas.HOME: (_) => Login(),
           AppRotas.GAME_FORM: (_) => GameForm(),
           AppRotas.USER_FORM: (_) => UserForm()
         },
